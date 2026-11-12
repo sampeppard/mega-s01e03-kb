@@ -1,0 +1,60 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: support desk
+status: open
+reviewed: 2026-11-11
+signature: Sam Peppard
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked **known: one issue, one fix queued**. Read report by report,
+it holds three problems with three different fixes. The queued parser fix closes only the first.
+
+<Callout kind="warn">
+Do not close #4471 when the parser fix ships. The other two problems have their own tickets now;
+their reporters are still waiting.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} issues={{
+  parser: 'https://github.com/sampeppard/mega-s01e03-kb/issues/1',
+  hint: 'https://github.com/sampeppard/mega-s01e03-kb/issues/2',
+  shift: 'https://github.com/sampeppard/mega-s01e03-kb/issues/3',
+}} />
+
+Every number above is computed from `reports-4471.json` on build, so it stays true as the desk
+keeps merging. Reports are counted once per id: the export pages overlap.
+
+## How the reports were split
+
+1. **By tenant, not by intake tag.** A report's cause depends on where the tenant is and which
+   booking form they run (`causes.ts`). The intake tag is a guess from the reporter's browser.
+2. **`hint`** is any day-first tenant's report that came in through the booking-v3 form, which
+   prints `MM/DD/YYYY` under its date field. People type what it says; the form reads it day first.
+   Fixing the parser does not fix the hint.
+3. **`shift`** is any report whose body describes a move by one day — 12 May shown as 11 May,
+   Tuesday shown as Monday, Lisbon and Toronto seeing different days. A day/month swap can never do
+   that, so these are not the parser bug, whatever tenant sent them. The desk had already noted
+   them (`desk-notes.json`) but counted them under `parser`; `problems.ts` reads the body and
+   keeps them apart.
+
+## Why it was one ticket
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject alone. "Appointment moved
+by itself" fits all three problems, so all three landed in one thread. Its stated consequence —
+different subjects, same bug, kept apart — happened the other way round here: same subjects,
+different bugs, merged.
+
+## Since April
+
+<QueueTimeline ticket={4471} />
+
+<RenderStamp {signature} />

@@ -4,7 +4,7 @@ title: '#4471 · three problems, not one'
 owner: support desk
 status: open
 reviewed: 2026-11-11
-signature: Sam Peppard
+signature: v1.eyJzdWIiOiI4MDMwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTQ0NTg0MzEsImV4cCI6MTc5NDU0NDgzMX0.i5YTz0oK6loYzWfBYtQNkatlczMIEP5A3gsrRgahkPY
 ---
 
 <script>
@@ -31,7 +31,9 @@ their reporters are still waiting.
 }} />
 
 Every number above is computed from `reports-4471.json` on build, so it stays true as the desk
-keeps merging. Reports are counted once per id: the export pages overlap.
+keeps merging. Reports are counted once per id: the export pages overlap. `parser` and `hint`
+are counted the desk's way (`causes.ts`), so together they are the whole ticket; the one-day moves
+are counted again under `shift`, where their fix lives.
 
 ## How the reports were split
 
@@ -43,8 +45,8 @@ keeps merging. Reports are counted once per id: the export pages overlap.
 3. **`shift`** is any report whose body describes a move by one day — 12 May shown as 11 May,
    Tuesday shown as Monday, Lisbon and Toronto seeing different days. A day/month swap can never do
    that, so these are not the parser bug, whatever tenant sent them. The desk had already noted
-   them (`desk-notes.json`) but counted them under `parser`; `problems.ts` reads the body and
-   keeps them apart.
+   them (`desk-notes.json`) and files them under `parser` by tenant; they stay filed there, and
+   `problems.ts` reads the body to give them a ticket of their own.
 
 ## Why it was one ticket
 
